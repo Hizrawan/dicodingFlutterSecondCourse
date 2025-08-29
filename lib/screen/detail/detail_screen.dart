@@ -21,7 +21,7 @@ class DetailScreen extends StatelessWidget {
          child: Column(
            children: [
              Image.network(
-               restaurant.image,
+               restaurant.imageUrl,
                fit: BoxFit.cover,
              ),
              const SizedBox.square(dimension: 16),
@@ -38,7 +38,7 @@ class DetailScreen extends StatelessWidget {
                          style: const TextStyle(fontSize: 18),
                        ),
                        Text(
-                         restaurant.address,
+                         restaurant.city,
                          style: const TextStyle(
                            fontSize: 12,
                          ),
@@ -50,7 +50,7 @@ class DetailScreen extends StatelessWidget {
                    children: [
                      const Icon(Icons.favorite),
                      const SizedBox.square(dimension: 4),
-                     Text(restaurant.like.toString())
+                     Text(restaurant.rating.toString())
                    ],
                  ),
                ],
