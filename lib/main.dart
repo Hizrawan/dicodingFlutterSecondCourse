@@ -1,49 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/screen/home/home.dart';
-import 'package:restaurant_app/stateful_widget.dart';
+import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/screen/detail/detail_screen.dart';
+import 'package:restaurant_app/screen/home/home_screen.dart';
+import 'package:restaurant_app/static/NavigationRoute.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  State<MyApp> createState() => _myAppState();
-}
-
-class _myAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Restaurant App',
+      title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: 
-      //HomeScreen(), //restaurant app
-      const MyStatefulWidget() // untuk latihan lifecycle
+      initialRoute: NavigationRoute.homeRoute.name,
+      routes: {
+        NavigationRoute.homeRoute.name: (context) => const HomeScreen(),
+        NavigationRoute.detailRoute.name: (context) => DetailScreen(
+          restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant,
+        ),
+      },
     );
   }
-
- late final AppLifecycleListener _listener;
-
- @override
- void initstate(){
-  super.initState();
-  _listener = AppLifecycleListener(
-    onDetach: () => debugPrint("AppLifecycleState.detached"),
-    onInactive: () => debugPrint("AppLifecycleState.inactive"),
-    onPause: () => debugPrint("AppLifecycleState.paused"),
-    onResume: () => debugPrint("AppLifecycleState.resumed"),
-    onRestart: () => debugPrint("AppLifecycleState.restarted")
-    );
- }
- @override
- void dispose(){
-  _listener.dispose();
-  super.dispose();
- }
 }
