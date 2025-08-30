@@ -26,7 +26,10 @@ class RestaurantCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(restaurant.imageUrl, fit: BoxFit.cover),
+                child: Hero(
+                  tag: restaurant.imageUrl,
+                  child: Image.network(restaurant.imageUrl, fit: BoxFit.cover),
+                ),
               ),
             ),
             const SizedBox.square(dimension: 8),
@@ -36,7 +39,10 @@ class RestaurantCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(restaurant.name, style: const TextStyle(fontSize: 16)),
+                  Text(
+                    restaurant.name,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox.square(dimension: 6),
                   Row(
                     children: [
@@ -46,6 +52,7 @@ class RestaurantCard extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
                     ],
@@ -58,7 +65,12 @@ class RestaurantCard extends StatelessWidget {
                         color: Color(0xFFFFC107),
                       ),
                       const SizedBox.square(dimension: 4),
-                      Expanded(child: Text(restaurant.rating.toString())),
+                      Expanded(
+                        child: Text(
+                          restaurant.rating.toString(),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
                     ],
                   ),
                 ],
