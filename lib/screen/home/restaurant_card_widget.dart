@@ -27,7 +27,7 @@ class RestaurantCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Hero(
-                  tag: restaurant.imageUrl,
+                  tag: restaurant.pictureId,
                   child: Image.network(restaurant.imageUrl, fit: BoxFit.cover),
                 ),
               ),

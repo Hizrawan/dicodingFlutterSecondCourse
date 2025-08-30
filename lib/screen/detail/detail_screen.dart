@@ -16,7 +16,7 @@ class DetailScreen extends StatelessWidget {
           child: Column(
             children: [
               Hero(
-                tag: restaurant.imageUrl,
+                tag: restaurant.pictureId,
                 child: Image.network(restaurant.imageUrl, fit: BoxFit.cover),
               ),
               const SizedBox.square(dimension: 16),
