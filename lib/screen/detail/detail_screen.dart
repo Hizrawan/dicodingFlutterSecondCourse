@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/screen/detail/bookmark_icon_widget.dart';
 
 class DetailScreen extends StatelessWidget {
   final Restaurant restaurant;
@@ -9,7 +10,10 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Restaurant Detail")),
+      appBar: AppBar(
+        title: const Text("Restaurant Detail"),
+        actions: [BookmarkIconWidget(restaurant: restaurant)],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

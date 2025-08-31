@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/model/restaurant.dart';
 import 'package:restaurant_app/screen/home/restaurant_card_widget.dart';
-import 'package:restaurant_app/static/NavigationRoute.dart';
+import 'package:restaurant_app/static/navigation_route.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

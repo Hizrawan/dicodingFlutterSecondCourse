@@ -18,6 +18,8 @@ class Restaurant {
       "https://restaurant-api.dicoding.dev/images/large/$pictureId";
 }
 
+List<Restaurant> bookmarkRestaurantList=[];
+
 final List<Restaurant> restaurantList = [
   Restaurant(
     id: 1,

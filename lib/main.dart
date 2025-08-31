@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/model/restaurant.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
-import 'package:restaurant_app/screen/home/home_screen.dart';
-import 'package:restaurant_app/static/NavigationRoute.dart';
+import 'package:restaurant_app/screen/main/main_screen.dart';
+import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/style/theme/restaurant_theme.dart';
 
 void main() {
@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
       theme: RestaurantTheme.lightTheme,
       darkTheme: RestaurantTheme.darkTheme,
       themeMode: ThemeMode.system,
-      initialRoute: NavigationRoute.homeRoute.name,
+      initialRoute: NavigationRoute.mainRoute.name,
       routes: {
-        NavigationRoute.homeRoute.name: (context) => const HomeScreen(),
+        NavigationRoute.mainRoute.name: (context) => const  MainScreen(),
         NavigationRoute.detailRoute.name: (context) => DetailScreen(
           restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant,
         ),
