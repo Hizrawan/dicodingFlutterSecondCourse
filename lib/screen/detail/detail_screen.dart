@@ -26,7 +26,10 @@ class DetailScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Image.network(restaurant.imageUrl, fit: BoxFit.cover),
+              Hero(
+                tag: restaurant.id,
+                child: Image.network(restaurant.imageUrl, fit: BoxFit.cover),
+              ),
               const SizedBox.square(dimension: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
