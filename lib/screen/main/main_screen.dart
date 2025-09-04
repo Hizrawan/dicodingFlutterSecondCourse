@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/screen/bookmark/bookmark_screen.dart';
 import 'package:restaurant_app/screen/home/home_screen.dart';
+import 'package:restaurant_app/provider/main/index_nav_provider.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -10,19 +12,22 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _indexBottomNavBar = 0;
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: switch (_indexBottomNavBar) {
-        0 => const HomeScreen(),
-        _ => const BookmarkScreen(),
-      },
+      body: Consumer<IndexNavProvider>(
+        builder: (context, value, child) {
+          return switch (value.indexBottomNavBar) {
+            1 => const BookmarkScreen(),
+            _ => const HomeScreen(),
+          };
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _indexBottomNavBar,
+        currentIndex: context.watch<IndexNavProvider>().indexBottomNavBar,
         onTap: (index) {
           setState(() {
-            _indexBottomNavBar = index;
+            context.read<IndexNavProvider>().setIndextBottomNavBar = index;
           });
         },
         items: const [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/model/restaurant.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app/provider/detail/bookmark_list_provider.dart';
 import 'package:restaurant_app/screen/home/restaurant_card_widget.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 
@@ -9,25 +10,37 @@ class BookmarkScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Bookmark List"),
-      ),
-      body: ListView.builder(
-          itemCount: bookmarkRestaurantList.length,
-          itemBuilder: (context, index) {
-            final restaurant = bookmarkRestaurantList[index];
-            return RestaurantCard(
-              restaurant: restaurant,
-              onTap: (){
-                Navigator.pushNamed(
-                  context,
-                  NavigationRoute.detailRoute.name,
-                  arguments: restaurant,
+      appBar: AppBar(title: const Text("Bookmark List")),
+      body: Consumer<BookmarkListProvider>(
+        builder: (context, value, child) {
+          final bookmarkList = value.bookmarkList;
+          return switch (bookmarkList.isNotEmpty) {
+            true => ListView.builder(
+              itemCount: bookmarkList.length,
+              itemBuilder: (context, index) {
+                final restaurant = bookmarkList[index];
+
+                return RestaurantCard(
+                  restaurant: restaurant,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      NavigationRoute.detailRoute.name,
+                      arguments: restaurant,
+                    );
+                  },
                 );
               },
-              );
-          },
-        )
+            ),
+            _ => const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Text("No Bookmarked")],
+              ),
+            ),
+          };
+        },
+      ),
     );
   }
 }

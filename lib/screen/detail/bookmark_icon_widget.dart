@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/provider/detail/bookmark_list_provider.dart';
+import 'package:restaurant_app/provider/detail/bookmark_icon_provider.dart';
 
 class BookmarkIconWidget extends StatefulWidget {
   final Restaurant restaurant;
+
   const BookmarkIconWidget({super.key, required this.restaurant});
 
   @override
@@ -10,38 +14,41 @@ class BookmarkIconWidget extends StatefulWidget {
 }
 
 class _BookmarkIconWidgetState extends State<BookmarkIconWidget> {
-  late bool _isBookmarked;
   @override
   void initState() {
-    final restaurantInList = bookmarkRestaurantList.where(
-      (element) => element.id == widget.restaurant.id,
-    );
-    setState(() {
-      if (restaurantInList.isNotEmpty) {
-        _isBookmarked = true;
-      } else {
-        _isBookmarked = false;
-      }
+    final bookmarkListProvider = context.read<BookmarkListProvider>();
+    final bookmarkIconProvider = context.read<BookmarkIconProvider>();
+
+    Future.microtask(() {
+      final restaurantInList = bookmarkListProvider.checkItemBookmark(
+        widget.restaurant,
+      );
+      bookmarkIconProvider.isBookmarked = restaurantInList;
     });
+
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        setState(() {
-          if (_isBookmarked) {
-            bookmarkRestaurantList.removeWhere(
-              (element) => element.id == widget.restaurant.id,
-            );
-            _isBookmarked = false;
-          } else {
-            bookmarkRestaurantList.add(widget.restaurant);
-            _isBookmarked = true;
-          }
-        });
+        final bookmarkListProvider = context.read<BookmarkListProvider>();
+        final bookmarkIconProvider = context.read<BookmarkIconProvider>();
+        final isBookmarked = bookmarkIconProvider.isBookmarked;
+
+        if (isBookmarked) {
+          bookmarkListProvider.removeBookmark(widget.restaurant);
+        } else {
+          bookmarkListProvider.addBookmark(widget.restaurant);
+        }
+        bookmarkIconProvider.isBookmarked = !isBookmarked;
       },
-      icon: Icon(_isBookmarked ? Icons.bookmark : Icons.bookmark_outline),
+      icon: Icon(
+        context.watch<BookmarkIconProvider>().isBookmarked
+            ? Icons.bookmark
+            : Icons.bookmark_outline,
+      ),
     );
   }
 }

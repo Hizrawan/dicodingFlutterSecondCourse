@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/provider/detail/bookmark_icon_provider.dart';
 import 'package:restaurant_app/screen/detail/bookmark_icon_widget.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -12,17 +14,19 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Restaurant Detail"),
-        actions: [BookmarkIconWidget(restaurant: restaurant)],
+        actions: [
+          ChangeNotifierProvider(
+            create: (context) => BookmarkIconProvider(),
+            child: BookmarkIconWidget(restaurant: restaurant),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Hero(
-                tag: restaurant.id,
-                child: Image.network(restaurant.imageUrl, fit: BoxFit.cover),
-              ),
+              Image.network(restaurant.imageUrl, fit: BoxFit.cover),
               const SizedBox.square(dimension: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,7 +50,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.favorite),
+                      const Icon(Icons.favorite, color: Colors.pink),
                       const SizedBox.square(dimension: 4),
                       Text(
                         restaurant.rating.toString(),
