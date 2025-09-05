@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/model/restaurant.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/detail/bookmark_icon_provider.dart';
 import 'package:restaurant_app/screen/detail/bookmark_icon_widget.dart';
 
