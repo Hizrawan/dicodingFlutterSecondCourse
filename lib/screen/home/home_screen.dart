@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/data/model/restaurant_list_response.dart';
 import 'package:restaurant_app/screen/home/restaurant_card_widget.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
@@ -80,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                      Navigator.pushNamed(
                        context,
                        NavigationRoute.detailRoute.name,
-                       arguments: restaurant,
+                       arguments: restaurant.id,
                      );
                    },
                  );

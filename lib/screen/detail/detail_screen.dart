@@ -1,13 +1,34 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/detail/bookmark_icon_provider.dart';
 import 'package:restaurant_app/screen/detail/bookmark_icon_widget.dart';
+import 'body_of_detail_screen_widget.dart';
+import 'package:restaurant_app/data/model/restaurant_detail_list_response.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
 
-class DetailScreen extends StatelessWidget {
-  final Restaurant restaurant;
+class DetailScreen extends StatefulWidget {
+  final String restaurantId;
 
-  const DetailScreen({super.key, required this.restaurant});
+  const DetailScreen({super.key, required this.restaurantId});
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  final Completer<Restaurant> _completerRestaurant = Completer<Restaurant>();
+  late Future<RestaurantDetailResponse> _futureRestaurantDetail;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _futureRestaurantDetail = ApiServices().getRestaurantDetail(
+      widget.restaurantId,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,61 +38,42 @@ class DetailScreen extends StatelessWidget {
         actions: [
           ChangeNotifierProvider(
             create: (context) => BookmarkIconProvider(),
-            child: BookmarkIconWidget(restaurant: restaurant),
+            child: FutureBuilder(
+              future: _completerRestaurant.future,
+              builder: (context, snapshot) {
+                return switch (snapshot.connectionState) {
+                  ConnectionState.done => BookmarkIconWidget(
+                    restaurant: snapshot.data!,
+                  ),
+                  _ => const SizedBox(),
+                };
+              },
+            ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Hero(
-                tag: restaurant.id,
-                child: Image.network(restaurant.imageUrl, fit: BoxFit.cover),
-              ),
-              const SizedBox.square(dimension: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          restaurant.name,
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
-                        Text(
-                          restaurant.city,
-                          style: Theme.of(context).textTheme.labelLarge
-                              ?.copyWith(fontWeight: FontWeight.w400),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.favorite, color: Colors.pink),
-                      const SizedBox.square(dimension: 4),
-                      Text(
-                        restaurant.rating.toString(),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox.square(dimension: 16),
-              Text(
-                restaurant.description,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: FutureBuilder(
+       future: _futureRestaurantDetail,
+       builder: (context, snapshot) {
+         switch (snapshot.connectionState) {
+           case ConnectionState.waiting:
+             return const Center(
+               child: CircularProgressIndicator(),
+             );
+           case ConnectionState.done:
+             if (snapshot.hasError) {
+               return Center(
+                 child: Text(snapshot.error.toString()),
+               );
+             }
+             final restaurantData = snapshot.data!.restaurant;
+             _completerRestaurant.complete(restaurantData);
+             return BodyOfDetailScreenWidget(restaurant: restaurantData);
+           default:
+             return const SizedBox();
+         }
+       },
+    )
     );
   }
 }

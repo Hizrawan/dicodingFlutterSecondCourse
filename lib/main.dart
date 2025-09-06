@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
 import 'package:restaurant_app/screen/main/main_screen.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
@@ -33,9 +32,9 @@ class MyApp extends StatelessWidget {
       initialRoute: NavigationRoute.mainRoute.name,
       routes: {
         NavigationRoute.mainRoute.name: (context) => const MainScreen(),
-        NavigationRoute.detailRoute.name: (context) => DetailScreen(
-          restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant,
-        ),
+         NavigationRoute.detailRoute.name: (context) => DetailScreen(
+             restaurantId: ModalRoute.of(context)?.settings.arguments as String,
+           ),
       },
     );
   }

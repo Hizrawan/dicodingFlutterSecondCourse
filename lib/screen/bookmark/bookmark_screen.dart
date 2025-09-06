@@ -23,12 +23,12 @@ class BookmarkScreen extends StatelessWidget {
                 return RestaurantCard(
                   restaurant: restaurant,
                   onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      NavigationRoute.detailRoute.name,
-                      arguments: restaurant,
-                    );
-                  },
+                     Navigator.pushNamed(
+                       context,
+                       NavigationRoute.detailRoute.name,
+                       arguments: restaurant.id,
+                     );
+                   },
                 );
               },
             ),
