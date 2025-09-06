@@ -1,4 +1,6 @@
 enum NavigationRoute {
+  onboardingRoute("/onboarding"),
+  loginRoute("/login"),
   mainRoute("/"),
   detailRoute("/detail");
 

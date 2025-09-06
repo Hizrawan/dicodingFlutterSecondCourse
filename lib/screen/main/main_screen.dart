@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/screen/bookmark/bookmark_screen.dart';
 import 'package:restaurant_app/screen/home/home_screen.dart';
+import 'package:restaurant_app/screen/profile/profile_screen.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
+import 'package:restaurant_app/provider/auth/auth_provider.dart';
+import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,11 +22,13 @@ class _MainScreenState extends State<MainScreen> {
         builder: (context, value, child) {
           return switch (value.indexBottomNavBar) {
             1 => const BookmarkScreen(),
+            2 => const ProfileScreen(),
             _ => const HomeScreen(),
           };
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: context.watch<IndexNavProvider>().indexBottomNavBar,
         onTap: (index) {
           setState(() {
@@ -40,6 +45,11 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.bookmark),
             label: "Bookmark",
             tooltip: "Bookmark Screen",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+            tooltip: "Profile Screen",
           ),
         ],
       ),

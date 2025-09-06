@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant_list_response.dart';
 import 'package:restaurant_app/screen/home/restaurant_card_widget.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<RestaurantListResponse> _futureRestaurantResponse;
   String query = "";
+  Timer? _debounceTimer;
 
   @override
   void initState() {
@@ -22,9 +24,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  void _searchRestaurant(String input) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        query = input.trim();
+        if (query.isEmpty) {
+          // Kalau query kosong, ambil semua restaurant
+          _futureRestaurantResponse = ApiServices().getRestaurantList();
+        } else {
+          // Panggil API search
+          _futureRestaurantResponse = ApiServices().searchRestaurant(query);
+        }
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
-    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Restaurant List"),
@@ -47,16 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  query = value;
-                });
-              },
+              onChanged: _searchRestaurant,
             ),
           ),
         ),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<RestaurantListResponse>(
         future: _futureRestaurantResponse,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
@@ -64,27 +82,66 @@ class _HomeScreenState extends State<HomeScreen> {
               return const Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Error: ${snapshot.error.toString()}",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _futureRestaurantResponse = query.isEmpty 
+                                ? ApiServices().getRestaurantList()
+                                : ApiServices().searchRestaurant(query);
+                          });
+                        },
+                        child: const Text("Retry"),
+                      ),
+                    ],
+                  ),
+                );
               }
-              final listOfRestaurant = snapshot.data!.restaurants;
-             return ListView.builder(
-               itemCount: listOfRestaurant.length,
-               itemBuilder: (context, index) {
-                 final restaurant = listOfRestaurant[index];
- 
- 
-                 return RestaurantCard(
-                   restaurant: restaurant,
-                   onTap: () {
-                     Navigator.pushNamed(
-                       context,
-                       NavigationRoute.detailRoute.name,
-                       arguments: restaurant.id,
-                     );
-                   },
-                 );
-               },
-             );
+              final listOfRestaurant = snapshot.data?.restaurants ?? [];
+              if (listOfRestaurant.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.search_off, size: 64, color: Colors.grey),
+                      const SizedBox(height: 16),
+                      Text(
+                        query.isEmpty 
+                            ? "No restaurants available" 
+                            : "No restaurants found for '$query'",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return ListView.builder(
+                itemCount: listOfRestaurant.length,
+                itemBuilder: (context, index) {
+                  final restaurant = listOfRestaurant[index];
+                  return RestaurantCard(
+                    restaurant: restaurant,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        NavigationRoute.detailRoute.name,
+                        arguments: restaurant.id,
+                      );
+                    },
+                  );
+                },
+              );
             default:
               return const SizedBox();
           }
