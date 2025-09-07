@@ -41,4 +41,31 @@ class RestaurantListProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // Search function
+  Future<void> searchRestaurant(String query) async {
+    if (query.trim().isEmpty) {
+      // If query is empty, fetch all restaurants
+      await fetchRestaurantList();
+      return;
+    }
+
+    try {
+      _resultState = RestaurantListLoadingState();
+      notifyListeners();
+
+      final result = await _apiServices.searchRestaurant(query);
+
+      if (result.error) {
+        _resultState = RestaurantListErrorState(result.message);
+        notifyListeners();
+      } else {
+        _resultState = RestaurantListLoadedState(result.restaurants);
+        notifyListeners();
+      }
+    } on Exception catch (e) {
+      _resultState = RestaurantListErrorState(e.toString());
+      notifyListeners();
+    }
+  }
 }

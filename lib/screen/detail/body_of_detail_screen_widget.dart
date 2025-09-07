@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/provider/auth/auth_provider.dart';
+import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 
 class BodyOfDetailScreenWidget extends StatelessWidget {
   const BodyOfDetailScreenWidget({
@@ -61,6 +62,8 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Review submitted!")),
                 );
+                // Refresh the restaurant detail to show the new review
+                context.read<RestaurantDetailProvider>().fetchRestaurantDetail(restaurantId);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

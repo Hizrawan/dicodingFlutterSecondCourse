@@ -16,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String query = "";
   Timer? _debounceTimer;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -30,7 +31,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _debounceTimer?.cancel();
+    _searchController.dispose();
     super.dispose();
+  }
+
+  void _searchRestaurant(String query) {
+    if (_debounceTimer?.isActive ?? false) _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      context.read<RestaurantListProvider>().searchRestaurant(query);
+    });
   }
 
   @override
@@ -43,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: "Search restaurant...",
                 prefixIcon: const Icon(Icons.search),
@@ -57,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderSide: BorderSide.none,
                 ),
               ),
-              // onChanged: _searchRestaurant,
+              onChanged: _searchRestaurant,
             ),
           ),
         ),

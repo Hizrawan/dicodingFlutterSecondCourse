@@ -14,18 +14,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "title": "Belajar Mudah",
-      "subtitle": "Akses materi coding kapan saja, di mana saja.",
+      "title": "Temukan Restoran Favoritmu",
+      "subtitle": "Jelajahi berbagai pilihan restoran terbaik di sekitarmu, mulai dari kuliner lokal hingga internasional.",
       "image": "assets/images/laptop-2298286_1280.png" // Ini gambarnya dari https://pixabay.com/vectors/laptop-computer-portable-pc-2298286/ (entar dimasukin ke readme sumbernya)
     },
     {
-      "title": "Latihan Interaktif",
-      "subtitle": "Tugas coding interaktif yang bikin makin jago.",
+      "title": "Menu Lengkap & Ulasan Jujur",
+      "subtitle": "Lihat menu, rating, dan ulasan pelanggan sebelum kamu memutuskan tempat makan.",
       "image": "assets/images/pixel-cells-3947911_1280.png" // ini gambarnya dari https://pixabay.com/vectors/pixel-cells-portfolio-work-folder-3947911/
     },
     {
-      "title": "Mentor & Komunitas",
-      "subtitle": "Diskusi bareng mentor dan programmer lain.",
+      "title": "Simpan & Bagikan Favoritmu",
+      "subtitle": "Tambah restoran ke daftar favoritmu dan bagikan rekomendasi ke teman-temanmu.",
       "image": "assets/images/social-media-3846597_1280.png" // ini gambarnya dari https://pixabay.com/vectors/social-media-connections-networking-3846597/
     },
   ];
