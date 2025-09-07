@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/model/restaurant_detail_list_response.dart';
+import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/provider/detail/bookmark_icon_provider.dart';
 import 'package:restaurant_app/screen/detail/body_of_detail_screen_widget.dart';
 import 'package:restaurant_app/screen/detail/bookmark_icon_widget.dart';
-
+import 'package:restaurant_app/static/restaurant_detail_result_state.dart';
 class DetailScreen extends StatefulWidget {
   final String restaurantId;
 
@@ -16,13 +15,17 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late Future<RestaurantDetailResponse> _futureRestaurantDetail;
 
   @override
   void initState() {
     super.initState();
-    _futureRestaurantDetail = ApiServices().getRestaurantDetail(widget.restaurantId);
-  }
+  Future.microtask(() {
+     context
+         .read<RestaurantDetailProvider>()
+         .fetchRestaurantDetail(widget.restaurantId);
+   });
+ }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -30,43 +33,35 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
         title: const Text("Restaurant Detail"),
         actions: [
-          ChangeNotifierProvider(
-            create: (_) => BookmarkIconProvider(),
-            child: FutureBuilder<RestaurantDetailResponse>(
-              future: _futureRestaurantDetail,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done &&
-                    snapshot.hasData) {
-                  final restaurant = snapshot.data!.restaurant;
-                  return BookmarkIconWidget(restaurant: restaurant);
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
-          ),
-        ],
+         ChangeNotifierProvider(
+           create: (context) => BookmarkIconProvider(),
+           child: Consumer<RestaurantDetailProvider>(
+             builder: (context, value, child) {
+               return switch (value.resultState) {
+                 RestaurantDetailLoadedState(data: var restaurant) =>
+                   BookmarkIconWidget(restaurant: restaurant),
+                 _ => const SizedBox(),
+               };
+             },
+           ),
+         ),
+       ],
       ),
-      body: FutureBuilder<RestaurantDetailResponse>(
-        future: _futureRestaurantDetail,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
-              }
-              if (snapshot.hasData) {
-                final restaurantData = snapshot.data!.restaurant;
-                return BodyOfDetailScreenWidget(restaurant: restaurantData);
-              }
-              return const SizedBox();
-            default:
-              return const SizedBox();
-          }
-        },
-      ),
-    );
+      body: Consumer<RestaurantDetailProvider>(
+       builder: (context, value, child) {
+         return switch (value.resultState) {
+           RestaurantDetailLoadingState() => const Center(
+               child: CircularProgressIndicator(),
+             ),
+           RestaurantDetailLoadedState(data: var restaurant) =>
+             BodyOfDetailScreenWidget(restaurant: restaurant),
+           RestaurantDetailErrorState(error: var message) => Center(
+               child: Text(message),
+             ),
+           _ => const SizedBox(),
+         };
+       },
+     ),
+   );
   }
 }

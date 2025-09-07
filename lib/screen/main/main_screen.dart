@@ -3,8 +3,6 @@ import 'package:restaurant_app/screen/bookmark/bookmark_screen.dart';
 import 'package:restaurant_app/screen/home/home_screen.dart';
 import 'package:restaurant_app/screen/profile/profile_screen.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
-import 'package:restaurant_app/provider/auth/auth_provider.dart';
-import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
