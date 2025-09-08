@@ -79,11 +79,11 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const Divider(height: 1),
                       ListTile(
-                        leading: const Icon(Icons.bookmark),
-                        title: const Text('My Bookmarks'),
+                        leading: const Icon(Icons.favorite),
+                        title: const Text('My favorites'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          // Navigate to bookmark tab
+                          // Navigate to favorite tab
                           context.read<IndexNavProvider>().setIndextBottomNavBar = 1;
                         },
                       ),

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/provider/auth/auth_provider.dart';
 import 'package:restaurant_app/provider/auth/onboarding_provider.dart';
-import 'package:restaurant_app/provider/detail/bookmark_list_provider.dart';
+import 'package:restaurant_app/provider/detail/favorite_list_provider.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
@@ -28,7 +28,7 @@ void main() {
           create: (context) => IndexNavProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => BookmarkListProvider(),
+          create: (context) => FavoriteListProvider(),
         ),
         Provider(
           create: (context) => ApiServices(),
