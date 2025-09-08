@@ -5,14 +5,9 @@ import 'package:restaurant_app/screen/profile/profile_screen.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
 import 'package:provider/provider.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +24,7 @@ class _MainScreenState extends State<MainScreen> {
         type: BottomNavigationBarType.fixed,
         currentIndex: context.watch<IndexNavProvider>().indexBottomNavBar,
         onTap: (index) {
-          setState(() {
-            context.read<IndexNavProvider>().setIndextBottomNavBar = index;
-          });
+          context.read<IndexNavProvider>().setIndextBottomNavBar = index;
         },
         items: const [
           BottomNavigationBarItem(

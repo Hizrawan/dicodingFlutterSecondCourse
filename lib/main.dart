@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/provider/auth/auth_provider.dart';
+import 'package:restaurant_app/provider/auth/onboarding_provider.dart';
 import 'package:restaurant_app/provider/detail/bookmark_list_provider.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
@@ -19,6 +20,9 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => OnboardingProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => IndexNavProvider(),

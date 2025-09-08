@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../static/navigation_route.dart';
+import '../../provider/auth/onboarding_provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -10,7 +12,6 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
-  int _currentPage = 0;
 
   final List<Map<String, String>> onboardingData = [
     {
@@ -42,7 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 controller: _controller,
                 itemCount: onboardingData.length,
                 onPageChanged: (index) {
-                  setState(() => _currentPage = index);
+                  context.read<OnboardingProvider>().setCurrentPage(index);
                 },
                 itemBuilder: (context, index) {
                   return Padding(
@@ -76,20 +77,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                onboardingData.length,
-                (index) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: _currentPage == index ? 16 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: _currentPage == index ? Colors.white : Colors.white54,
-                    borderRadius: BorderRadius.circular(8),
+            Consumer<OnboardingProvider>(
+              builder: (context, onboardingProvider, child) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    onboardingData.length,
+                    (index) => Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: onboardingProvider.currentPage == index ? 16 : 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: onboardingProvider.currentPage == index ? Colors.white : Colors.white54,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
             const SizedBox(height: 20),
 
@@ -107,7 +112,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   onPressed: () {
-                    if (_currentPage == onboardingData.length - 1) {
+                    final onboardingProvider = context.read<OnboardingProvider>();
+                    if (onboardingProvider.isLastPage) {
                       Navigator.pushReplacementNamed(
                         context,
                         NavigationRoute.loginRoute.name,
@@ -119,8 +125,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       );
                     }
                   },
-                  child: Text(
-                    _currentPage == onboardingData.length - 1 ? "Mulai" : "Lanjut",
+                  child: Consumer<OnboardingProvider>(
+                    builder: (context, onboardingProvider, child) {
+                      return Text(
+                        onboardingProvider.isLastPage ? "Mulai" : "Lanjut",
+                      );
+                    },
                   ),
                 ),
               ),
