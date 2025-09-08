@@ -28,12 +28,13 @@ class RestaurantListProvider extends ChangeNotifier {
       // todo-02-home-07: second, run the api service
       final result = await _apiServices.getRestaurantList();
 
-      if (result.error) {
-        _resultState = RestaurantListErrorState(result.message);
-        notifyListeners();
-      } else {
-        _resultState = RestaurantListLoadedState(result.restaurants);
-        notifyListeners();
+      switch (result) {
+        case Success(value: final restaurantListResponse):
+          _resultState = RestaurantListLoadedState(restaurantListResponse.restaurants);
+          notifyListeners();
+        case Failure(error: final message):
+          _resultState = RestaurantListErrorState(message);
+          notifyListeners();
       }
     } on Exception catch (e) {
       // todo-02-home-08: then, notify the widget when it's error
@@ -56,12 +57,13 @@ class RestaurantListProvider extends ChangeNotifier {
 
       final result = await _apiServices.searchRestaurant(query);
 
-      if (result.error) {
-        _resultState = RestaurantListErrorState(result.message);
-        notifyListeners();
-      } else {
-        _resultState = RestaurantListLoadedState(result.restaurants);
-        notifyListeners();
+      switch (result) {
+        case Success(value: final restaurantListResponse):
+          _resultState = RestaurantListLoadedState(restaurantListResponse.restaurants);
+          notifyListeners();
+        case Failure(error: final message):
+          _resultState = RestaurantListErrorState(message);
+          notifyListeners();
       }
     } on Exception catch (e) {
       _resultState = RestaurantListErrorState(e.toString());

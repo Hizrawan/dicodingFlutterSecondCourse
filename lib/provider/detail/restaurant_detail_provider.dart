@@ -18,12 +18,13 @@ class RestaurantDetailProvider extends ChangeNotifier {
 
       final result = await _apiServices.getRestaurantDetail(id);
 
-      if (result.error) {
-        _resultState = RestaurantDetailErrorState(result.message);
-        notifyListeners();
-      } else {
-        _resultState = RestaurantDetailLoadedState(result.restaurant);
-        notifyListeners();
+      switch (result) {
+        case Success(value: final restaurantDetailResponse):
+          _resultState = RestaurantDetailLoadedState(restaurantDetailResponse.restaurant);
+          notifyListeners();
+        case Failure(error: final message):
+          _resultState = RestaurantDetailErrorState(message);
+          notifyListeners();
       }
     } on Exception catch (e) {
       _resultState = RestaurantDetailErrorState(e.toString());
