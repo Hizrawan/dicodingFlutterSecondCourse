@@ -7,6 +7,7 @@ import 'package:restaurant_app/provider/detail/favorite_list_provider.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
+import 'package:restaurant_app/provider/theme/theme_provider.dart';
 import 'package:restaurant_app/screen/auth/login_page.dart';
 import 'package:restaurant_app/screen/auth/onboarding_page.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
@@ -43,6 +44,7 @@ void main() {
             context.read<ApiServices>(),
           ),
         ),
+        ChangeNotifierProvider(create: (coontext) => ThemeProvider()),
       ],
       child: const MyApp(),
     ),
@@ -58,7 +60,7 @@ class MyApp extends StatelessWidget {
       title: 'Restaurant App',
       theme: RestaurantTheme.lightTheme,
       darkTheme: RestaurantTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: Provider.of<ThemeProvider>(context).themeMode,
       initialRoute: NavigationRoute.onboardingRoute.name,
       routes: {
         NavigationRoute.onboardingRoute.name: (context) => const OnboardingScreen(),

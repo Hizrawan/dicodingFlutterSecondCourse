@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/auth/auth_provider.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
+import 'package:restaurant_app/provider/theme/theme_provider.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -10,10 +11,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           return Padding(
@@ -31,7 +29,9 @@ class ProfileScreen extends StatelessWidget {
                           radius: 30,
                           backgroundColor: Theme.of(context).primaryColor,
                           child: Text(
-                            (authProvider.username ?? 'U').toUpperCase().substring(0, 1),
+                            (authProvider.username ?? 'U')
+                                .toUpperCase()
+                                .substring(0, 1),
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -46,14 +46,15 @@ class ProfileScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'Welcome, ${authProvider.username ?? 'User'}',
-                                style: Theme.of(context).textTheme.headlineSmall,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall,
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Restaurant App User',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(color: Colors.grey[600]),
                               ),
                             ],
                           ),
@@ -62,9 +63,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Profile Options
                 Card(
                   child: Column(
@@ -84,7 +85,10 @@ class ProfileScreen extends StatelessWidget {
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
                           // Navigate to favorite tab
-                          context.read<IndexNavProvider>().setIndextBottomNavBar = 1;
+                          context
+                                  .read<IndexNavProvider>()
+                                  .setIndextBottomNavBar =
+                              1;
                         },
                       ),
                       const Divider(height: 1),
@@ -93,26 +97,34 @@ class ProfileScreen extends StatelessWidget {
                         title: const Text('Settings'),
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
-                          // TODO: Navigate to settings
+                        },
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.brightness_6),
+                        title: const Text('Toggle Theme'),
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                        onTap: () {
+                          context.read<ThemeProvider>().toggleTheme();
                         },
                       ),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
-                // Logout Button
+
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      // Show confirmation dialog
                       final shouldLogout = await showDialog<bool>(
                         context: context,
                         builder: (context) => AlertDialog(
                           title: const Text('Logout'),
-                          content: const Text('Are you sure you want to logout?'),
+                          content: const Text(
+                            'Are you sure you want to logout?',
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context, false),
@@ -125,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         ),
                       );
-                      
+
                       if (shouldLogout == true) {
                         context.read<AuthProvider>().logout();
                         Navigator.pushReplacementNamed(
@@ -143,16 +155,16 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 const Spacer(),
-                
+
                 // App Version
                 Center(
                   child: Text(
                     'Restaurant App v1.0.0',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                 ),
               ],
