@@ -118,6 +118,17 @@ class ProfileScreen extends StatelessWidget {
                           provider.showNotification();
                         },
                       ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.image),
+                        title: const Text("Big Picture Notification"),
+                        subtitle: const Text("Show restaurant image notification"),
+                        onTap: () async {
+                          final provider = context.read<LocalNotificationProvider>();
+                          await provider.requestPermissions();
+                          provider.showBigPictureNotification();
+                        },
+                      ),
                     ],
                   ),
                 ),

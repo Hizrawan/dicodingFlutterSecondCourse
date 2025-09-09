@@ -60,6 +60,7 @@ void main() {
        ChangeNotifierProvider(
          create: (context) => LocalNotificationProvider(
            context.read<LocalNotificationService>(),
+           context.read<ApiServices>(),
          ),
        ),
       ],
