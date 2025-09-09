@@ -35,7 +35,7 @@ class LocalDatabaseService {
 
   Future<String> insertItem(Restaurant restaurant) async {
     final db = await _initializeDb();
-
+    
     final restaurantData = {
       "id": restaurant.id,
       "name": restaurant.name,
@@ -44,15 +44,11 @@ class LocalDatabaseService {
       "city": restaurant.city,
       "address": restaurant.address,
       "rating": restaurant.rating,
-      "categories": jsonEncode(
-        restaurant.categories.map((e) => e.toJson()).toList(),
-      ),
+      "categories": jsonEncode(restaurant.categories.map((e) => e.toJson()).toList()),
       "menus": jsonEncode(restaurant.menus.toJson()),
-      "customerReviews": jsonEncode(
-        restaurant.customerReviews.map((e) => e.toJson()).toList(),
-      ),
+      "customerReviews": jsonEncode(restaurant.customerReviews.map((e) => e.toJson()).toList()),
     };
-
+    
     await db.insert(
       _tableName,
       restaurantData,

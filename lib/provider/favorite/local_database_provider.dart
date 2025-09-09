@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/local/local_database_service.dart';
+import 'package:restaurant_app/services/local_database_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 
 class LocalDatabaseProvider extends ChangeNotifier {

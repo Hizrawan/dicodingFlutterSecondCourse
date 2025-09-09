@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/auth/auth_provider.dart';
 import 'package:restaurant_app/provider/main/index_nav_provider.dart';
+import 'package:restaurant_app/provider/notification/local_notification_provider.dart';
 import 'package:restaurant_app/provider/theme/theme_provider.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 
@@ -96,8 +97,7 @@ class ProfileScreen extends StatelessWidget {
                         leading: const Icon(Icons.settings),
                         title: const Text('Settings'),
                         trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () {
-                        },
+                        onTap: () {},
                       ),
                       const Divider(height: 1),
                       ListTile(
@@ -106,6 +106,16 @@ class ProfileScreen extends StatelessWidget {
                         trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
                           context.read<ThemeProvider>().toggleTheme();
+                        },
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(Icons.notifications),
+                        title: const Text("Permission Setting"),
+                        onTap: () async {
+                          final provider = context.read<LocalNotificationProvider>();
+                          await provider.requestPermissions();
+                          provider.showNotification();
                         },
                       ),
                     ],

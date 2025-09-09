@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/local/local_database_service.dart';
+import 'package:restaurant_app/services/api_service.dart';
+import 'package:restaurant_app/services/local_database_service.dart';
 import 'package:restaurant_app/provider/auth/auth_provider.dart';
 import 'package:restaurant_app/provider/auth/onboarding_provider.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
@@ -15,6 +15,8 @@ import 'package:restaurant_app/screen/detail/detail_screen.dart';
 import 'package:restaurant_app/screen/main/main_screen.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/style/theme/restaurant_theme.dart';
+import 'package:restaurant_app/services/local_notification_service.dart';
+import 'package:restaurant_app/provider/notification/local_notification_provider.dart';
 
 void main() {
   runApp(
@@ -50,6 +52,14 @@ void main() {
        ChangeNotifierProvider(
          create: (context) => LocalDatabaseProvider(
            context.read<LocalDatabaseService>(),
+         ),
+       ),
+       Provider(
+         create: (context) => LocalNotificationService()..init(),
+       ),
+       ChangeNotifierProvider(
+         create: (context) => LocalNotificationProvider(
+           context.read<LocalNotificationService>(),
          ),
        ),
       ],
