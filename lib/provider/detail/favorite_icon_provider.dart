@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 
 class FavoriteIconProvider extends ChangeNotifier {
-bool _isFavoriteed = false;
-bool get isFavoriteed => _isFavoriteed;
+bool _isFavorited = false;
+bool get isFavorited => _isFavorited;
 
-  set isFavoriteed(bool value) {
-    _isFavoriteed = value;
+  set isFavorited(bool value) {
+    _isFavorited = value;
     notifyListeners();
   }
 }
