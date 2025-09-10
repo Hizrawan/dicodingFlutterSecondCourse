@@ -95,9 +95,14 @@ class ProfileScreen extends StatelessWidget {
                       const Divider(height: 1),
                       ListTile(
                         leading: const Icon(Icons.settings),
-                        title: const Text('Settings'),
+                        title: const Text('Pengaturan Notifikasi'),
                         trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            NavigationRoute.settingsRoute.name,
+                          );
+                        },
                       ),
                       const Divider(height: 1),
                       ListTile(

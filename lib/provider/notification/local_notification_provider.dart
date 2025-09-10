@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_app/services/local_notification_service.dart';
 import 'package:restaurant_app/services/api_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:math';
 
 class LocalNotificationProvider extends ChangeNotifier {
@@ -12,6 +13,8 @@ class LocalNotificationProvider extends ChangeNotifier {
   int _notificationId = 0;
   bool? _permission = false;
   bool? get permission => _permission;
+
+  List<PendingNotificationRequest> pendingNotificationRequests = [];
 
   Future<void> requestPermissions() async {
     _permission = await flutterNotificationService.requestPermissions();
@@ -30,23 +33,25 @@ class LocalNotificationProvider extends ChangeNotifier {
 
   Future<void> showBigPictureNotification() async {
     _notificationId += 1;
-    
+
     try {
       // Fetch restaurant list from API
       final result = await apiService.getRestaurantList();
-      
+
       if (result is Success) {
         final successResult = result as Success;
         final restaurants = successResult.value.restaurants;
         if (restaurants.isNotEmpty) {
           // Select a random restaurant
-          final randomRestaurant = restaurants[Random().nextInt(restaurants.length)];
+          final randomRestaurant =
+              restaurants[Random().nextInt(restaurants.length)];
           final imageUrl = randomRestaurant.imageUrl;
-          
+
           flutterNotificationService.showBigPictureNotification(
             id: _notificationId,
             title: "Ayo Coba makan di ${randomRestaurant.name}",
-            body: "Rating: ${randomRestaurant.rating} ⭐ | ${randomRestaurant.city}",
+            body:
+                "Rating: ${randomRestaurant.rating} ⭐ | ${randomRestaurant.city}",
             payload: "Big picture notification with id $_notificationId",
             imageUrl: imageUrl,
           );
@@ -56,21 +61,52 @@ class LocalNotificationProvider extends ChangeNotifier {
     } catch (e) {
       // Fallback to static picture IDs if API fails
     }
-    
+
     // Fallback: Use static picture IDs if API fails
     final List<String> restaurantPictureIds = [
-      "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
     ];
-    
-    final randomPictureId = restaurantPictureIds[Random().nextInt(restaurantPictureIds.length)];
-    final imageUrl = "https://restaurant-api.dicoding.dev/images/large/$randomPictureId";
-    
+
+    final randomPictureId =
+        restaurantPictureIds[Random().nextInt(restaurantPictureIds.length)];
+    final imageUrl =
+        "https://restaurant-api.dicoding.dev/images/large/$randomPictureId";
+
     flutterNotificationService.showBigPictureNotification(
       id: _notificationId,
       title: "🍽️ Restoran Favorit Menunggumu!",
-      body: "Temukan restoran terbaik di sekitarmu dengan menu lezat dan rating tinggi",
+      body:
+          "Temukan restoran terbaik di sekitarmu dengan menu lezat dan rating tinggi",
       payload: "Big picture notification with id $_notificationId",
       imageUrl: imageUrl,
     );
+  }
+
+  void scheduleDailyTenAMNotification() {
+    _notificationId += 1;
+    flutterNotificationService.scheduleDailyTenAMNotification(
+      id: _notificationId,
+    );
+  }
+
+  Future<void> checkPendingNotificationRequests(BuildContext context) async {
+    pendingNotificationRequests = await flutterNotificationService
+        .pendingNotificationRequests();
+    notifyListeners();
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await flutterNotificationService.cancelNotification(id);
   }
 }

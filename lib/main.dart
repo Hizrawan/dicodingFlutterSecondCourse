@@ -13,10 +13,12 @@ import 'package:restaurant_app/screen/auth/login_page.dart';
 import 'package:restaurant_app/screen/auth/onboarding_page.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
 import 'package:restaurant_app/screen/main/main_screen.dart';
+import 'package:restaurant_app/screen/settings/settings_screen.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/style/theme/restaurant_theme.dart';
 import 'package:restaurant_app/services/local_notification_service.dart';
 import 'package:restaurant_app/provider/notification/local_notification_provider.dart';
+import 'package:restaurant_app/provider/settings/notification_settings_provider.dart';
 
 void main() {
   runApp(
@@ -55,12 +57,20 @@ void main() {
          ),
        ),
        Provider(
-         create: (context) => LocalNotificationService()..init(),
+         create: (context) => LocalNotificationService()
+         ..init()
+         ..configureLocalTimeZone()
+         ..initializeWorkManager(),
        ),
        ChangeNotifierProvider(
          create: (context) => LocalNotificationProvider(
            context.read<LocalNotificationService>(),
            context.read<ApiServices>(),
+         ),
+       ),
+       ChangeNotifierProvider(
+         create: (context) => NotificationSettingsProvider(
+           context.read<LocalNotificationService>(),
          ),
        ),
       ],
@@ -87,6 +97,7 @@ class MyApp extends StatelessWidget {
         NavigationRoute.detailRoute.name: (context) => DetailScreen(
               restaurantId: ModalRoute.of(context)?.settings.arguments as String,
             ),
+        NavigationRoute.settingsRoute.name: (context) => const SettingsScreen(),
       },
     );
   }
